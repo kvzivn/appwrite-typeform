@@ -1,0 +1,10 @@
+# .gitignore
+
+# Dependency directories
+node_modules/
+
+# Environmental settings
+.env
+
+# Log files
+npm-debug.log*
