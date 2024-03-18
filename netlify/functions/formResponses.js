@@ -15,7 +15,7 @@ exports.handler = async function (event) {
 
   try {
     const response = await fetch(
-      `https://api.typeform.com/forms/uZg4jefe/responses?included_response_id=${email}`,
+      `https://api.typeform.com/forms/uZg4jefe/responses`,
       {
         headers: {
           Authorization: `Bearer ${TYPEFORM_API_KEY}`,
@@ -25,14 +25,11 @@ exports.handler = async function (event) {
 
     const data = await response.json()
 
-    console.log(`Form Data Fetched: ${JSON.stringify(data.items)}`)
-
-    const responseData = data.items
-    const userResponses = responseData.find(
-      (response) => response.email === email
+    const userResponses = data.items.filter((response) =>
+      response.answers.some((answer) => answer.email === email)
     )
 
-    if (userResponses) {
+    if (userResponses.length) {
       console.log(`User Responses Found: ${JSON.stringify(userResponses)}`)
       return {
         statusCode: 200,
