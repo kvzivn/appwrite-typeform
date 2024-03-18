@@ -1,7 +1,7 @@
-const axios = require("axios")
+const fetch = require("node-fetch")
 
-exports.handler = async function (event, context) {
-  const email = JSON.parse(event.body).email
+exports.handler = async function (event) {
+  const email = event.queryStringParameters.email
   const TYPEFORM_API_KEY = process.env.TYPEFORM_API_KEY
 
   const headers = {
@@ -9,30 +9,21 @@ exports.handler = async function (event, context) {
     "Access-Control-Allow-Credentials": true,
   }
 
-  if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 200,
-      headers,
-      body: "This was a preflight call.",
-    }
-  }
-
   try {
-    const response = await axios.get(
-      "https://api.typeform.com/forms/uZg4jefe/responses",
+    const response = await fetch(
+      `https://api.typeform.com/forms/uZg4jefe/responses?included_response_id=${email}`,
       {
         headers: {
           Authorization: `Bearer ${TYPEFORM_API_KEY}`,
         },
-        params: {
-          included_response_id: email,
-        },
       }
     )
 
-    console.log(`Form Data Fetched: ${JSON.stringify(response.data.items)}`)
+    const data = await response.json()
 
-    const responseData = response.data.items
+    console.log(`Form Data Fetched: ${JSON.stringify(data.items)}`)
+
+    const responseData = data.items
     const userResponses = responseData.find(
       (response) => response.email === email
     )
