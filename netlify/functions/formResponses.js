@@ -4,6 +4,19 @@ exports.handler = async function (event, context) {
   const email = JSON.parse(event.body).email
   const TYPEFORM_API_KEY = process.env.TYPEFORM_API_KEY
 
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": true,
+  }
+
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers,
+      body: "This was a preflight call.",
+    }
+  }
+
   try {
     const response = await axios.get(
       "https://api.typeform.com/forms/uZg4jefe/responses",
@@ -28,20 +41,14 @@ exports.handler = async function (event, context) {
       console.log(`User Responses Found: ${JSON.stringify(userResponses)}`)
       return {
         statusCode: 200,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-        },
+        headers,
         body: JSON.stringify(userResponses),
       }
     } else {
       console.log(`No responses found for: ${email}`)
       return {
         statusCode: 404,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-        },
+        headers,
         body: JSON.stringify({ error: "No responses found for this email" }),
       }
     }
@@ -49,10 +56,7 @@ exports.handler = async function (event, context) {
     console.error(`Error: ${error.message}`)
     return {
       statusCode: 500,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-      },
+      headers,
       body: JSON.stringify({ error: "Server error" }),
     }
   }
