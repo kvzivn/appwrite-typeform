@@ -1,6 +1,10 @@
-const fetch = require("node-fetch")
+let fetch
 
 exports.handler = async function (event) {
+  if (!fetch) {
+    fetch = (await import("node-fetch")).default
+  }
+
   const email = event.queryStringParameters.email
   const TYPEFORM_API_KEY = process.env.TYPEFORM_API_KEY
 
