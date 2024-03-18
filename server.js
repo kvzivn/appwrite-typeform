@@ -8,7 +8,7 @@ export default async ({ req, res, log, error }) => {
 
   try {
     const response = await axios.get(
-      "https://api.typeform.com/forms/70y3ggn7l5c/responses",
+      "https://api.typeform.com/forms/uZg4jefe/responses",
       {
         headers: {
           Authorization: `Bearer ${TYPEFORM_API_KEY}`,
