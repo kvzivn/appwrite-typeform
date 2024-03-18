@@ -3,8 +3,8 @@ const axios = require("axios")
 
 const TYPEFORM_API_KEY = process.env.TYPEFORM_API_KEY
 
-exports.handler = async (event) => {
-  const { email } = JSON.parse(event.body)
+export default async ({ req, res, log, error }) => {
+  const { email } = JSON.parse(req.body)
 
   try {
     const response = await axios.get(
@@ -19,27 +19,24 @@ exports.handler = async (event) => {
       }
     )
 
+    log(`Form Data Fetched: ${JSON.stringify(response.data.items)}`)
+
     const responseData = response.data.items
     const userResponses = responseData.find(
       (response) => response.email === email
     )
 
     if (userResponses) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify(userResponses),
-      }
+      log(`User Responses Found: ${JSON.stringify(userResponses)}`)
+      return res.send(JSON.stringify(userResponses))
     } else {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({ error: "No responses found for this email" }),
-      }
+      log(`No responses found for: ${email}`)
+      return res.send(
+        JSON.stringify({ error: "No responses found for this email" })
+      )
     }
-  } catch (error) {
-    console.error(error)
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Server error" }),
-    }
+  } catch (e) {
+    error(`Error: ${e.message}`)
+    return res.send(JSON.stringify({ error: "Server error" }))
   }
 }
