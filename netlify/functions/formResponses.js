@@ -28,12 +28,20 @@ exports.handler = async function (event, context) {
       console.log(`User Responses Found: ${JSON.stringify(userResponses)}`)
       return {
         statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
         body: JSON.stringify(userResponses),
       }
     } else {
       console.log(`No responses found for: ${email}`)
       return {
         statusCode: 404,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
         body: JSON.stringify({ error: "No responses found for this email" }),
       }
     }
@@ -41,6 +49,10 @@ exports.handler = async function (event, context) {
     console.error(`Error: ${error.message}`)
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
       body: JSON.stringify({ error: "Server error" }),
     }
   }
