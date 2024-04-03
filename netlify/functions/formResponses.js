@@ -15,7 +15,7 @@ exports.handler = async function (event) {
 
   try {
     const response = await fetch(
-      `https://api.typeform.com/forms/uZg4jefe/responses`,
+      `https://api.typeform.com/forms/uZg4jefe/responses?page_size=1000`,
       {
         headers: {
           Authorization: `Bearer ${TYPEFORM_API_KEY}`,
